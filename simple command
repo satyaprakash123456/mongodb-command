@@ -1,0 +1,78 @@
+//master login
+mongo --authenticationDatabase admin -uroot -p
+password
+
+mongodb start-
+//db start-
+/bin/mongod -f /etc/mongod.conf &
+
+
+
+//create user
+use databasename
+var user = {
+  "user" : "user123",
+  "pwd" : "xxxxxx",
+  roles : [
+      {
+          "role" : "readWrite",
+          "db" : "databasename"
+      }
+  ]
+}
+db.createUser(user);
+
+//database login
+mongo --authenticationDatabase databasenane -uUser -p
+password
+
+
+//find duplicate mongodb collection in all
+value-value we are tring to get duplicate
+db.collectionName.aggregate([
+   {$group: {
+       _id: {CERT: "$value"},
+       uniqueIds: {$addToSet: "$_id"},
+       count: {$sum: 1}
+       }
+   },
+   {$match: {
+       count: {"$gt": 1}
+       }
+   }
+], { allowDiskUse: true });
+
+//Taking json backup of mongo command
+mongoexport -d database -uUser -p 'Password' -h localhost  -c collectionname --out /tmp/collectionname.json
+//Taking bson backup of mongo
+mongodump -d database -uUser -p 'Password' -h localhost  -c collectionname --out /tmp/
+//Restoring mongodump. --drop means droping older collection
+mongorestore -d database -uUser -p 'Password' -h localhost  -c collectionname  /tmp/collectionname.bson --drop
+
+//Sorting data
+$value=field name and limit 2
+db.collectionName.find().sort( { "$value": -1 } ).limit(2)
+
+
+
+//log rotation-
+01 00 * * * /bin/bash -x /home/user/mongologScript/Mongo_logRotate.sh > /tmp/debug.log
+
+Mongo_logRotate.sh
+
+#!/bin/sh
+DATE=`date +%Y-%m-%d`
+DelDate=`date +%Y-%m-%d -d "7 days ago"`
+log='mongod.log'
+path='/log/db/'
+user='root'
+Pwd='password'
+host='127.0.0.1'
+DB='admin'
+P='27017'
+echo 'Testing.. $DATE'
+/bin/mongo --authenticationDatabase $DB --port $P -u $user -p$Pwd $DB --eval "db.adminCommand( { logRotate : 1 } )"
+#mongo --eval $DB "db.adminCommand( { logRotate : 1 } )"
+echo 'Done'
+#### Retention ####
+#rm -rf $path/$log.$DelDate*
