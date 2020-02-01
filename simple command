@@ -53,6 +53,10 @@ mongorestore -d database -uUser -p 'Password' -h localhost  -c collectionname  /
 $value=field name and limit 2
 db.collectionName.find().sort( { "$value": -1 } ).limit(2)
 
+//finding pattern match
+fieldname-any filed name
+db.collectionname.find({rule:{ $regex: /fieldname/ }},{rule:1})
+
 
 
 //log rotation-
